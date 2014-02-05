@@ -15,7 +15,8 @@ qemu (1.7.0+dfsg-3ubuntu1~ppa1) trusty; urgency=medium
     - debian/qemu-system-common.preinst: add kvm group
     - debian/qemu-system-common.postinst: remove acl placed by udev,
       and add udevadm trigger.
-    - qemu-system-x86.links: add eepro100.rom
+    - qemu-system-x86.links: add eepro100.rom, remove pxe-virtio,
+      pxe-e1000 and pxe-rtl8139.
     - add qemu-system-x86.qemu-kvm.upstart and .default
     - qemu-user-static.postinst-in: remove arm64 binfmt
     - debian/rules:
