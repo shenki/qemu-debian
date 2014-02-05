@@ -24,7 +24,7 @@ then
   chmod 0660 /dev/kvm
 fi
 
-if [ dpkg-version --is ubuntu ]; then
+if dpkg-vendor --is ubuntu; then
 # Remove group::--- acl mistakenly placed on /dev/kvm by udev-acl
 # This can be removed when udev-acl+consolekit are removed in favor
 # of logind.
