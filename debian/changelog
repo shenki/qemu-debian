@@ -6,7 +6,7 @@ qemu (1.7.0+dfsg-3ubuntu4) UNRELEASED; urgency=medium
 
   [ Dann Frazier ]
   * ubuntu/linux-user-Implement-sendmmsg-syscall.patch: Fix user mode DNS
-    on arm64 and maybe others.
+    on arm64 and maybe others. (LP: #1284344)
 
   [ Serge Hallyn ]
   * Move the OVMF.fd link to the ovmf package.
