@@ -1,12 +1,17 @@
 qemu (1.7.0+dfsg-3ubuntu4) UNRELEASED; urgency=medium
 
+  [ Steve Langasek ]
   * Move the OVMF.fd link from qemu-system-common to qemu-system-x86; it's
     potentially useful to have OVMF builds for other architectures, but
     this file/link is definitely x86-specific at the moment.
   * Merge debian/control with unreleased Debian branch: our architecture
     lists should now be in sync.
 
- -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 21 Feb 2014 12:14:53 -0800
+  [ Dann Frazier ]
+  * ubuntu/linux-user-Implement-sendmmsg-syscall.patch: Fix user mode DNS
+    on arm64 and maybe others.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 21 Feb 2014 12:14:53 -0800
 
 qemu (1.7.0+dfsg-3ubuntu3) trusty; urgency=medium
 
