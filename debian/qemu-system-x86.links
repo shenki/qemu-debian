@@ -24,4 +24,3 @@ usr/lib/ipxe/qemu/efi-pcnet.rom usr/share/qemu/efi-pcnet.rom
 usr/lib/ipxe/qemu/efi-rtl8139.rom usr/share/qemu/efi-rtl8139.rom
 usr/lib/ipxe/qemu/efi-virtio.rom usr/share/qemu/efi-virtio.rom
 usr/lib/ipxe/eepro100.rom usr/share/qemu/eepro100.rom
-usr/share/ovmf/OVMF.fd usr/share/qemu/OVMF.fd
