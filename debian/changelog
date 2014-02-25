@@ -1,4 +1,4 @@
-qemu (1.7.0+dfsg-3ubuntu4) UNRELEASED; urgency=medium
+qemu (1.7.0+dfsg-3ubuntu4) trusty; urgency=medium
 
   [ Steve Langasek ]
   * Merge debian/control with unreleased Debian branch: our architecture
