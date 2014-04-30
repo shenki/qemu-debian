@@ -1,3 +1,21 @@
+qemu (2.0.0~rc1+dfsg-0ubuntu3.1) trusty-security; urgency=medium
+
+  * SECURITY UPDATE: possible arbitrary code execution via vmxnet3 device
+    - debian/patches/CVE-2013-4544.patch: add more validation in
+      hw/net/vmxnet3.c.
+    - CVE-2013-4544
+  * SECURITY UPDATE: arbitrary code execution via MAC address table update
+    - debian/patches/CVE-2014-0150.patch: fix overflow in
+      hw/net/virtio-net.c.
+    - CVE-2014-0150
+  * SECURITY UPDATE: denial of service and possible code execution via
+    smart self test counter
+    - debian/patches/CVE-2014-2894.patch: correct self-test count in
+      hw/ide/core.c.
+    - CVE-2014-2894
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Thu, 24 Apr 2014 16:07:57 -0400
+
 qemu (2.0.0~rc1+dfsg-0ubuntu3) trusty; urgency=medium
 
   * d/p/ubuntu/kvm_physical_sync_dirty_bitmap-ignore-ENOENT-from-kv.patch
