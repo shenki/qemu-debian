@@ -1,3 +1,10 @@
+qemu (2.0.0~rc1+dfsg-0ubuntu4) utopic; urgency=medium
+
+  * debian/control: drop the versioning requirement from libfdt-dev
+    build-dependency, as it is longer needed (LP: #1295072)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 30 Apr 2014 10:03:08 -0500
+
 qemu (2.0.0~rc1+dfsg-0ubuntu3.1) trusty-security; urgency=medium
 
   * SECURITY UPDATE: possible arbitrary code execution via vmxnet3 device
