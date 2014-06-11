@@ -2365,7 +2365,6 @@ char *qemu_find_file(int type, const char *name)
         abort();
     }
 
-retry:
     for (i = 0; i < data_dir_idx; i++) {
         buf = g_strdup_printf("%s/%s%s", data_dir[i], subdir, name);
         if (access(buf, R_OK) == 0) {
@@ -2374,16 +2373,6 @@ retry:
         }
         g_free(buf);
     }
-
-    if (memcmp(name, "efi-", 4) == 0 && type == QEMU_FILE_TYPE_BIOS) {
-        /* if not found but requested efi-*, retry with pxe-* */
-        buf = alloca(strlen(name) + 1);
-        strcpy(buf, "pxe");
-        strcpy(buf + 3, name + 3);
-        name = buf;
-        goto retry;
-    }
-
     return NULL;
 }
 
@@ -3997,6 +3986,14 @@ int main(int argc, char **argv, char **envp)
         }
     }
 
+    /* If no data_dir is specified then try to find it relative to the
+       executable path.  */
+    if (data_dir_idx < ARRAY_SIZE(data_dir)) {
+        data_dir[data_dir_idx] = os_find_datadir();
+        if (data_dir[data_dir_idx] != NULL) {
+            data_dir_idx++;
+        }
+    }
     /* If all else fails use the install path specified when building. */
     if (data_dir_idx < ARRAY_SIZE(data_dir)) {
         data_dir[data_dir_idx++] = CONFIG_QEMU_DATADIR;
