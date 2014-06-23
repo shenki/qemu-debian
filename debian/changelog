@@ -9,8 +9,11 @@ qemu (2.0.0+dfsg-6ubuntu1) UNRELEASED; urgency=medium
     - qemu-system-common.postinst: remove acl placed by udev,
       and add udevadm trigger.
     - qemu-system-common.preinst: add kvm group if needed
+    - add qemu-kvm upstart job and defaults file (rules,
+      qemu-system-x86.qemu-kvm.default, qemu-system-x86.qemu-kvm.upstart)
+    - debian/rules: add qemu-kvm-spice
 
- -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 23 Jun 2014 12:32:03 -0500
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 23 Jun 2014 13:24:48 -0500
 
 qemu (2.0.0+dfsg-6) unstable; urgency=medium
 
