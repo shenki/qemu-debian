@@ -6,6 +6,9 @@ qemu (2.0.0+dfsg-6ubuntu1) UNRELEASED; urgency=medium
     - control-in: stick to libgnutls-dev and libsdl1.2-dev.
     - qemu-system-common.install: add debian/tmp/usr/lib to install the
       qemu-bridge-helper
+    - qemu-system-common.postinst: remove acl placed by udev,
+      and add udevadm trigger.
+    - qemu-system-common.preinst: add kvm group if needed
 
  -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 23 Jun 2014 12:32:03 -0500
 
