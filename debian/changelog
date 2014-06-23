@@ -4,6 +4,8 @@ qemu (2.0.0+dfsg-6ubuntu1) UNRELEASED; urgency=medium
     - qemu-system-x86.links: add eepro100.rom link, drop links which we
       have in ipxe-qemu package.
     - control-in: stick to libgnutls-dev and libsdl1.2-dev.
+    - qemu-system-common.install: add debian/tmp/usr/lib to install the
+      qemu-bridge-helper
 
  -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 23 Jun 2014 12:32:03 -0500
 
