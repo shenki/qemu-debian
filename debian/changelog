@@ -16,6 +16,8 @@ qemu (2.0.0+dfsg-6ubuntu1) UNRELEASED; urgency=medium
       do not auto-load the kvm kernel module.  Enable nesting by default
       on intel.
     - binfmt-update-in: make sure to filter out compat arches.
+    - debian/qemu-system-alternatives.in: use a later version as ubuntu
+      removed the alternatives bit later.
     - d/p/ubuntu/expose-vmx_qemu64cpu.patch: enable nested kvm by default
       in qemu64 cpu type.
     - d/p/ubuntu/define-trusty-machine-type.patch: define a default trusty
