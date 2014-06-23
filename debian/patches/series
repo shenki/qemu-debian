@@ -3,3 +3,4 @@ retry-pxe-after-efi.patch
 use-fixed-data-path.patch
 mjt-set-oem-in-rsdt-like-slic.diff
 ubuntu/expose-vmx_qemu64cpu.patch
+ubuntu/define-trusty-machine-type.patch
