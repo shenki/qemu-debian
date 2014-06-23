@@ -1,3 +1,11 @@
+qemu (2.0.0+dfsg-6ubuntu1) UNRELEASED; urgency=medium
+
+  * Merge 2.0.0+dfsg-6.  Remaining changes:
+    - qemu-system-x86.links: add eepro100.rom link, drop links which we
+      have in ipxe-qemu package.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 23 Jun 2014 12:32:03 -0500
+
 qemu (2.0.0+dfsg-6) unstable; urgency=medium
 
   * build-depend on libgnutls28-dev not libgnutls-dev
