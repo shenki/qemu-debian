@@ -1,4 +1,4 @@
-qemu (2.1+dfsg-2~ubuntu1) utopic; urgency=medium
+qemu (2.1+dfsg-2ubuntu1) utopic; urgency=medium
 
   * Merge new debian release
   * Remaining changes:
@@ -26,7 +26,7 @@ qemu (2.1+dfsg-2~ubuntu1) utopic; urgency=medium
     - apport hook for qemu source package: d/source_qemu-kvm.py,
       d/qemu-system-common.install
 
- -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 25 Jul 2014 08:35:02 -0500
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 05 Aug 2014 13:53:06 -0500
 
 qemu (2.1+dfsg-2) unstable; urgency=medium
 
