@@ -1,6 +1,7 @@
 qemu (2.1+dfsg-2ubuntu3) UNRELEASED; urgency=medium
 
   * Upstart job: use getent group to check for kvm group
+  * apport: 'qemu' doesn't exist any more, so check for any qemu* tasks
 
  -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 15 Aug 2014 07:50:34 -0500
 
