@@ -1,4 +1,4 @@
-qemu (2.1+dfsg-3ubuntu1) UNRELEASED; urgency=medium
+qemu (2.1+dfsg-3ubuntu1) utopic; urgency=medium
 
   * Merge new debian release
   * Remaining changes:
