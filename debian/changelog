@@ -24,6 +24,42 @@ qemu (2.1+dfsg-3) unstable; urgency=medium
 
  -- Michael Tokarev <mjt@tls.msk.ru>  Thu, 14 Aug 2014 14:30:24 +0400
 
+qemu (2.1+dfsg-2ubuntu2) utopic; urgency=medium
+
+  * reload kvm_intel if needed to set the nested=Y flag (LP: #1324174)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 11 Aug 2014 12:58:50 -0500
+
+qemu (2.1+dfsg-2ubuntu1) utopic; urgency=medium
+
+  * Merge new debian release
+  * Remaining changes:
+    - qemu-system-x86.links: add eepro100.rom link, drop links which we
+      have in ipxe-qemu package.
+    - control-in: stick to libsdl1.2-dev.
+    - qemu-system-common.install: add debian/tmp/usr/lib to install the
+      qemu-bridge-helper
+    - qemu-system-common.postinst: remove acl placed by udev,
+      and add udevadm trigger.
+    - qemu-system-common.preinst: add kvm group if needed
+    - add qemu-kvm upstart job and defaults file (rules,
+      qemu-system-x86.qemu-kvm.default, qemu-system-x86.qemu-kvm.upstart)
+    - debian/rules: add qemu-kvm-spice
+    - rules,qemu-system-x86.modprobe: support use under older udevs which
+      do not auto-load the kvm kernel module.  Enable nesting by default
+      on intel.
+    - binfmt-update-in: make sure to filter out compat arches.
+    - debian/qemu-system-alternatives.in: use a later version as ubuntu
+      removed the alternatives bit later.
+    - d/p/ubuntu/expose-vmx_qemu64cpu.patch: enable nested kvm by default
+      in qemu64 cpu type.
+    - d/p/ubuntu/define-trusty-machine-type.patch: define a default trusty
+      machine type to ease future live vm migration.
+    - apport hook for qemu source package: d/source_qemu-kvm.py,
+      d/qemu-system-common.install
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 05 Aug 2014 13:53:06 -0500
+
 qemu (2.1+dfsg-2) unstable; urgency=medium
 
   * l2tp-linux-only.patch: fix FTBFS on kfreebsd
