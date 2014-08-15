@@ -1,3 +1,31 @@
+qemu (2.1+dfsg-3ubuntu1) UNRELEASED; urgency=medium
+
+  * Merge new debian release
+  * Remaining changes:
+    - control-in: stick to libsdl1.2-dev.
+    - qemu-system-common.install: add debian/tmp/usr/lib to install the
+      qemu-bridge-helper
+    - qemu-system-common.postinst: remove acl placed by udev,
+      and add udevadm trigger.
+    - qemu-system-common.preinst: add kvm group if needed
+    - add qemu-kvm upstart job and defaults file (rules,
+      qemu-system-x86.qemu-kvm.default, qemu-system-x86.qemu-kvm.upstart)
+    - rules,qemu-system-x86.modprobe: support use under older udevs which
+      do not auto-load the kvm kernel module.  Enable nesting by default
+      on intel.
+    - debian/qemu-system-alternatives.in: use a later version as ubuntu
+      removed the alternatives bit later.
+    - d/p/ubuntu/expose-vmx_qemu64cpu.patch: enable nested kvm by default
+      in qemu64 cpu type.
+    - d/p/ubuntu/define-trusty-machine-type.patch: define a default trusty
+      machine type to ease future live vm migration.
+    - apport hook for qemu source package: d/source_qemu-kvm.py,
+      d/qemu-system-common.install
+  * Upstart job: use getent group to check for kvm group
+  * apport: 'qemu' doesn't exist any more, so check for any qemu* tasks
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 15 Aug 2014 08:44:54 -0500
+
 qemu (2.1+dfsg-3) unstable; urgency=medium
 
   * set SHELL = /bin/sh -e, so that more complex shell constructs
