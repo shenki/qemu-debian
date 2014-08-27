@@ -1,3 +1,10 @@
+qemu (2.1+dfsg-3ubuntu3) UNRELEASED; urgency=medium
+
+  * replace d/p/revert-acpi-table-size-bump with
+    pc-reserve-more-memory-for-acpi.patch from upstream
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 27 Aug 2014 18:24:32 -0500
+
 qemu (2.1+dfsg-3ubuntu2) utopic; urgency=medium
 
   * revert-acpi-table-size-bump - get qemu -kernel working again.
