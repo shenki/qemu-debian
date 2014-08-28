@@ -5,6 +5,7 @@ qemu (2.1+dfsg-3ubuntu3) UNRELEASED; urgency=medium
   * debian/binfmt-update-in
     - don't run in a container
     - add ppc64le as target (LP: #1358268)
+  * Add experimental ppcle support (LP: #1358268)
 
  -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 27 Aug 2014 18:24:32 -0500
 
