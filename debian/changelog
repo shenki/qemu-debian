@@ -1,4 +1,4 @@
-qemu (2.1+dfsg-3ubuntu3) UNRELEASED; urgency=medium
+qemu (2.1+dfsg-3ubuntu3) utopic; urgency=medium
 
   * replace d/p/revert-acpi-table-size-bump with
     pc-reserve-more-memory-for-acpi.patch from upstream
