@@ -8,3 +8,4 @@ ide-only-constrain-read_write-requests-to-drive-size.diff
 ubuntu/expose-vmx_qemu64cpu.patch
 ubuntu/define-trusty-machine-type.patch
 pc-reserve-more-memory-for-acpi.patch
+Support-ppcle.patch
