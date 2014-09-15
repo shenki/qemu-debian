@@ -1,3 +1,9 @@
+qemu (2.1+dfsg-4ubuntu2) utopic; urgency=medium
+
+  * move kvm_intel nested setting to qemu-system-x86.postinst.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 12 Sep 2014 23:12:52 +0000
+
 qemu (2.1+dfsg-4ubuntu1) utopic; urgency=medium
 
   * Merge new debian release
