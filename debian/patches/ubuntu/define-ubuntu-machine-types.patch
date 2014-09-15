@@ -1,7 +1,7 @@
-Index: qemu-2.1+dfsg/hw/i386/pc_piix.c
+Index: qemu/hw/i386/pc_piix.c
 ===================================================================
---- qemu-2.1+dfsg.orig/hw/i386/pc_piix.c
-+++ qemu-2.1+dfsg/hw/i386/pc_piix.c
+--- qemu.orig/hw/i386/pc_piix.c
++++ qemu/hw/i386/pc_piix.c
 @@ -457,9 +457,7 @@ static void pc_xen_hvm_init(MachineState
  static QEMUMachine pc_i440fx_machine_v2_1 = {
      PC_I440FX_2_1_MACHINE_OPTIONS,
@@ -24,7 +24,7 @@ Index: qemu-2.1+dfsg/hw/i386/pc_piix.c
 +	.default_machine_opts = "firmware=bios-256k.bin",
 +	.name = "pc-i440fx-trusty",
 +	.desc = "Ubuntu 14.04 PC (i440FX + PIIX, 1996)",
-+	.hot_add_cpu = pc_hot_add_cpu
++	.hot_add_cpu = pc_hot_add_cpu,
 +	.init = pc_init_pci_2_0,
 +	.compat_props = (GlobalProperty[]) {
 +		PC_COMPAT_2_0,
@@ -38,7 +38,7 @@ Index: qemu-2.1+dfsg/hw/i386/pc_piix.c
 +	.name = "pc-i440fx-utopic",
 +	.alias = "pc",
 +	.desc = "Ubuntu 14.10 PC (i440FX + PIIX, 1996)",
-+	.hot_add_cpu = pc_hot_add_cpu
++	.hot_add_cpu = pc_hot_add_cpu,
 +	.init = pc_init_pci,
 +	.is_default = 1,
 +};
