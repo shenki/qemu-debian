@@ -1,4 +1,4 @@
-qemu (2.1+dfsg-4ubuntu3) UNRELEASED; urgency=medium
+qemu (2.1+dfsg-4ubuntu3) utopic; urgency=medium
 
   * Re-stick the trusty machine type to 2.0 (where it must always stay) and
     define a new, default, pc-i440fx-utopic machine type (LP: #1369481)
