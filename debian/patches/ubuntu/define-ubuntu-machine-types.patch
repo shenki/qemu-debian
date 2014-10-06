@@ -10,7 +10,7 @@ Index: qemu/hw/i386/pc_piix.c
  };
  
  #define PC_I440FX_2_0_MACHINE_OPTIONS PC_I440FX_2_1_MACHINE_OPTIONS
-@@ -919,3 +918,36 @@ static void pc_machine_init(void)
+@@ -919,3 +918,37 @@ static void pc_machine_init(void)
  }
  
  machine_init(pc_machine_init);
@@ -35,6 +35,7 @@ Index: qemu/hw/i386/pc_piix.c
 +	.default_machine_opts = "firmware=bios-256k.bin",
 +	.name = "pc-i440fx-utopic",
 +	.desc = "Ubuntu 14.10 PC (i440FX + PIIX, 1996)",
++	.alias = "ubuntu",
 +	.hot_add_cpu = pc_hot_add_cpu,
 +	.init = pc_init_pci,
 +	.is_default = 1,
