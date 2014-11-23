@@ -1,3 +1,10 @@
+qemu (2.1+dfsg-7ubuntu1) vivid; urgency=medium
+
+  * Merge 2.1+dfsg-7.  Remaining changes:
+    - (fill in;  list deleted patches)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Sat, 22 Nov 2014 18:36:53 -0600
+
 qemu (2.1+dfsg-7) unstable; urgency=high
 
   * urgency is high due to 2 security fixes
