@@ -25,5 +25,4 @@ block-raw-posix-Fix-disk-corruption-in-try_fiemap.patch
 block-raw-posix-use-seek_hole-ahead-of-fiemap.patch
 ubuntu/expose-vmx_qemu64cpu.patch
 ubuntu/define-ubuntu-machine-types.patch
-pc-reserve-more-memory-for-acpi.patch
 CVE-2014-5388.patch
