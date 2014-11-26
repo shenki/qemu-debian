@@ -1,7 +1,36 @@
 qemu (2.1+dfsg-7ubuntu1) vivid; urgency=medium
 
   * Merge 2.1+dfsg-7.  Remaining changes:
-    - (fill in;  list deleted patches)
+    - qemu-system-common.postinst:
+      * remove acl placed by udev, and add udevadm trigger.
+      * reload kvm_intel if needed to set nested=1
+    - qemu-system-common.preinst: add kvm group if needed
+    - add qemu-kvm upstart job and defaults file (rules,
+      qemu-system-x86.qemu-kvm.default, qemu-system-x86.qemu-kvm.upstart)
+    - rules,qemu-system-x86.modprobe: support use under older udevs which
+      do not auto-load the kvm kernel module.  Enable nesting by default
+      on intel.
+    - debian/qemu-system-alternatives.in: use a later version as ubuntu
+      removed the alternatives bit later.
+    - d/p/ubuntu/expose-vmx_qemu64cpu.patch: enable nested kvm by default
+      in qemu64 cpu type.
+    - d/p/ubuntu/define-trusty-machine-type.patch: define a default trusty
+      machine type to ease future live vm migration.
+    - apport hook for qemu source package: d/source_qemu-kvm.py,
+      d/qemu-system-common.install
+    - debian/binfmt-update-in: support ppcle
+      * debian/binfmt-update-in
+      * Support-ppcle.patch
+  * Dropped patches (upstream or now in debian's tree):
+    - pc-reserve-more-memory-for-acpi.patch
+    - CVE-2014-5388.patch
+    - 501-block-raw-posix-fix-disk-corruption-in-try-fiemap and
+      502-block-raw-posic-use-seek-hole-ahead-of-fiemap (combined
+      in debian)
+    - CVE-2014-3615.patch
+    - CVE-2014-3640.patch
+    - CVE-2014-3689.patch
+    - CVE-2014-7815.patch
 
  -- Serge Hallyn <serge.hallyn@ubuntu.com>  Sat, 22 Nov 2014 18:36:53 -0600
 
