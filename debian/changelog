@@ -1,4 +1,4 @@
-qemu (1:2.1+dfsg-11ubuntu1) UNRELEASED; urgency=medium
+qemu (1:2.1+dfsg-11ubuntu1) vivid; urgency=medium
 
   * Merge 2.1+dfsg-11.  Remaining changes:
     - qemu-system-common.postinst:
