@@ -1,3 +1,37 @@
+qemu (1:2.1+dfsg-11ubuntu1) UNRELEASED; urgency=medium
+
+  * Merge 2.1+dfsg-11.  Remaining changes:
+    - qemu-system-common.postinst:
+      * remove acl placed by udev, and add udevadm trigger.
+      * reload kvm_intel if needed to set nested=1
+    - qemu-system-common.preinst: add kvm group if needed
+    - add qemu-kvm upstart job and defaults file (rules,
+      qemu-system-x86.qemu-kvm.default, qemu-system-x86.qemu-kvm.upstart)
+    - rules,qemu-system-x86.modprobe: support use under older udevs which
+      do not auto-load the kvm kernel module.  Enable nesting by default
+      on intel.
+    - debian/qemu-system-alternatives.in: use a later version as ubuntu
+      removed the alternatives bit later.
+    - d/p/ubuntu/expose-vmx_qemu64cpu.patch: enable nested kvm by default
+      in qemu64 cpu type.
+    - d/p/ubuntu/define-trusty-machine-type.patch: define a default trusty
+      machine type to ease future live vm migration.
+    - apport hook for qemu source package: d/source_qemu-kvm.py,
+      d/qemu-system-common.install
+    - debian/binfmt-update-in: support ppcle
+      * debian/binfmt-update-in
+      * Support-ppcle.patch
+    - Upstream patches to fix AArch64 emulation ignoring SPSel=0:
+      * d/p/target-arm-A64-Break-out-aarch64_save-restore_sp.patch
+      * d/p/target-arm-A64-Respect-SPSEL-in-ERET-SP-restore.patch
+      * d/p/target-arm-A64-Respect-SPSEL-when-taking-exceptions.patch:
+  * Dropped patches (upstream or now in debian's tree):
+    - upstream-xen_disk-fix-unmapping-of-persistent-grants.patch
+    - CVE-2014-7840.patch
+    - CVE-2014-8106.patch
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 17 Dec 2014 13:57:34 -0600
+
 qemu (1:2.1+dfsg-11) unstable; urgency=medium
 
   * bump epoch and reupload to cancel 2.2+dfsg-1exp upload
