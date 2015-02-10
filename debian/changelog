@@ -1,6 +1,6 @@
-qemu (1:2.2+dfsg-5expubuntu1) UNRELEASED; urgency=medium
+qemu (1:2.2+dfsg-5expubuntu1) vivid; urgency=medium
 
-  * Merge 1:2.2+dfsg-5exp from Debian.
+  * Merge 1:2.2+dfsg-5exp from Debian.  (LP: #1409308)
     - debian/rules: do not drop the init scripts loading kvm modules
       (still needed in precise in cloud archive)
   * Remaining changes:
