@@ -1,3 +1,30 @@
+qemu (1:2.2+dfsg-5expubuntu1) UNRELEASED; urgency=medium
+
+  * Merge 1:2.2+dfsg-5exp from Debian.
+    - debian/rules: do not drop the init scripts loading kvm modules
+      (still needed in precise in cloud archive)
+  * Remaining changes:
+    - qemu-system-common.postinst:
+      * remove acl placed by udev, and add udevadm trigger.
+      * reload kvm_intel if needed to set nested=1
+    - qemu-system-common.preinst: add kvm group if needed
+    - add qemu-kvm upstart job and defaults file (rules,
+      qemu-system-x86.qemu-kvm.default, qemu-system-x86.qemu-kvm.upstart)
+    - rules,qemu-system-x86.modprobe: support use under older udevs which
+      do not auto-load the kvm kernel module.  Enable nesting by default
+      on intel.
+    - d/p/ubuntu/expose-vmx_qemu64cpu.patch: enable nested kvm by default
+      in qemu64 cpu type.
+    - d/p/ubuntu/define-trusty-machine-type.patch: define a default trusty
+      machine type to ease future live vm migration.
+    - apport hook for qemu source package: d/source_qemu-kvm.py,
+      d/qemu-system-common.install
+  * Dropped all patches which are applied upstream
+  * Update ubuntu-vivid machine type to default to std graphics (following
+    upstream's lead for pc-i440fx-2.2 machine type)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 09 Feb 2015 22:31:09 -0600
+
 qemu (1:2.2+dfsg-5exp) experimental; urgency=medium
 
   * fix initscript removal once again
