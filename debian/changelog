@@ -1,4 +1,4 @@
-qemu (1:2.2+dfsg-5expubuntu3) UNRELEASED; urgency=medium
+qemu (1:2.2+dfsg-5expubuntu4) UNRELEASED; urgency=medium
 
   [Scott Moser]
   * update d/kvm.powerpc to avoid use of awk, which isn't allowed by aa
@@ -6,8 +6,10 @@ qemu (1:2.2+dfsg-5expubuntu3) UNRELEASED; urgency=medium
   
   [Serge Hallyn]
   * add symlink qemu-system-ppc64le -> qemu-system-ppc64
+  * debian/rules: fix DEB_HOST_ARCh fix to ppc64el for installing qemu-kvm init script
+    (LP: #1419855)
 
- -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 12 Feb 2015 13:01:13 -0600
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 12 Feb 2015 13:04:21 -0600
 
 qemu (1:2.2+dfsg-5expubuntu1) vivid; urgency=medium
 
