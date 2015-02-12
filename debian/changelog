@@ -1,4 +1,4 @@
-qemu (1:2.2+dfsg-5expubuntu4) UNRELEASED; urgency=medium
+qemu (1:2.2+dfsg-5expubuntu4) vivid; urgency=medium
 
   [Scott Moser]
   * update d/kvm.powerpc to avoid use of awk, which isn't allowed by aa
