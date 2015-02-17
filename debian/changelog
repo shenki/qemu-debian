@@ -18,7 +18,7 @@ qemu (1:2.2+dfsg-5expubuntu4) vivid; urgency=medium
   
   [Chris J Arges]
   * Determine if we are running inside a virtual environment. If running inside
-    a virtualized enviornment do _not_ automatically enable KSM. (LP: #1418339) 
+    a virtualized enviornment do _not_ automatically enable KSM. (LP: #1414153)
 
  -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 12 Feb 2015 13:04:21 -0600
 
