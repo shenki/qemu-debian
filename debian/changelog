@@ -20,6 +20,10 @@ qemu (1:2.3+dfsg-4ubuntu1) wily; urgency=medium
     - apport hook for qemu source package: d/source_qemu-kvm.py,
       d/qemu-system-common.install
   * Dropped all patches which are applied upstream
+  * Move the upstart jobs to a generic script
+    - add new qemu-kvm-init script
+    - call that from upstart and sysvrc qemu-kvm scripts
+    - move to qemu-system-common, which must now B/R qemu-system-{x86,ppc}
 
  -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 03 Jun 2015 13:36:36 -0500
 
