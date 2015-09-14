@@ -5,6 +5,10 @@ qemu (1:2.1+dfsg-12+deb8u5) UNRELEASED; urgency=medium
   * apply qemu-char-handle-EINTR-for-TCP-character-devices.patch and
     qemu-char-fix-missed-data-on-unix-socket.patch from upstream
     (Closes: #793817)
+  * update upstream stable patch from v2.1.3 tag (Closes: #786789)
+    v2.1.3 incorporates CVE-2014-3689 (#765496) vmware-vga fix and
+    tcg-mips-fix-store-softmmu-slow-path.patch, and brings up many
+    other fixes in various places
 
  -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 14 Sep 2015 13:45:59 +0300
 
