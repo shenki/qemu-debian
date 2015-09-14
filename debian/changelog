@@ -1,3 +1,10 @@
+qemu (1:2.1+dfsg-12+deb8u5) UNRELEASED; urgency=medium
+
+  * apply block-fix-max-nb_sectors-in-bdrv_make_zero.patch from upstream
+    (Closes: #797221)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 14 Sep 2015 13:45:59 +0300
+
 qemu (1:2.1+dfsg-12+deb8u4) jessie-security; urgency=high
 
   * ne2000-add-checks-to-validate-ring-buffer-pointers-CVE-2015-5279.patch
