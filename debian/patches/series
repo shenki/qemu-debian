@@ -72,3 +72,6 @@ ide-fix-ATAPI-command-permissions-CVE-2015-6855.patch
 ne2000-add-checks-to-validate-ring-buffer-pointers-CVE-2015-5279.patch
 ne2000-avoid-infinite-loop-when-receiving-packets-CVE-2015-5278.patch
 block-fix-max-nb_sectors-in-bdrv_make_zero.patch
+#793817
+qemu-char-handle-EINTR-for-TCP-character-devices.patch
+qemu-char-fix-missed-data-on-unix-socket.patch

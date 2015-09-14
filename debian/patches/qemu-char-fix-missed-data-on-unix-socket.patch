@@ -1,0 +1,67 @@
+From 4bf1cb03fbc43b0055af60d4ff093d6894aa4338 Mon Sep 17 00:00:00 2001
+From: Nils Carlson <pyssling@ludd.ltu.se>
+Date: Sun, 19 Jul 2015 20:39:56 +0000
+Subject: [PATCH 2/2] qemu-char: Fix missed data on unix socket
+Bug-Debian: http://bugs.debian.org/793817
+
+Commit 812c1057 introduced HUP detection on unix and tcp sockets prior
+to a read in tcp_chr_read. This unfortunately broke CloudStack 4.2
+which relied on the old behaviour where data on a socket was readable
+even if a HUP was present.
+
+A working solution is to properly check the return values from recv,
+handling a closed socket once there is no more data to read.
+
+Also enable polling for G_IO_NVAL to ensure the callback is called
+for all possible events as these should now be possible to handle
+with the improved error detection.
+
+Signed-off-by: Nils Carlson <pyssling@ludd.ltu.se>
+Message-Id: <1437338396-22336-1-git-send-email-pyssling@ludd.ltu.se>
+[Do not handle EINTR; use socket_error(). - Paolo]
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ qemu-char.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/qemu-char.c b/qemu-char.c
+index 3200200..d956f8d 100644
+--- a/qemu-char.c
++++ b/qemu-char.c
+@@ -807,7 +807,8 @@ static gboolean io_watch_poll_prepare(GSource *source, gint *timeout_)
+     }
+ 
+     if (now_active) {
+-        iwp->src = g_io_create_watch(iwp->channel, G_IO_IN | G_IO_ERR | G_IO_HUP);
++        iwp->src = g_io_create_watch(iwp->channel,
++                                     G_IO_IN | G_IO_ERR | G_IO_HUP | G_IO_NVAL);
+         g_source_set_callback(iwp->src, iwp->fd_read, iwp->opaque, NULL);
+         g_source_attach(iwp->src, NULL);
+     } else {
+@@ -2856,12 +2857,6 @@ static gboolean tcp_chr_read(GIOChannel *chan, GIOCondition cond, void *opaque)
+     uint8_t buf[READ_BUF_LEN];
+     int len, size;
+ 
+-    if (cond & G_IO_HUP) {
+-        /* connection closed */
+-        tcp_chr_disconnect(chr);
+-        return TRUE;
+-    }
+-
+     if (!s->connected || s->max_size <= 0) {
+         return TRUE;
+     }
+@@ -2869,7 +2864,9 @@ static gboolean tcp_chr_read(GIOChannel *chan, GIOCondition cond, void *opaque)
+     if (len > s->max_size)
+         len = s->max_size;
+     size = tcp_chr_recv(chr, (void *)buf, len);
+-    if (size == 0) {
++    if (size == 0 ||
++        (size < 0 &&
++         socket_error() != EAGAIN && socket_error() != EWOULDBLOCK)) {
+         /* connection closed */
+         tcp_chr_disconnect(chr);
+     } else if (size > 0) {
+-- 
+2.1.4
+

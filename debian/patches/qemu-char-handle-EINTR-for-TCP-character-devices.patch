@@ -1,0 +1,45 @@
+From 9172f428afc1461b1d9b33ebca3a679b9adf7c3a Mon Sep 17 00:00:00 2001
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Tue, 21 Jul 2015 09:25:54 +0200
+Subject: [PATCH 1/2] qemu-char: handle EINTR for TCP character devices
+Bug-Debian: http://bugs.debian.org/793817
+
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ qemu-char.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/qemu-char.c b/qemu-char.c
+index 617e034..3200200 100644
+--- a/qemu-char.c
++++ b/qemu-char.c
+@@ -2797,7 +2797,10 @@ static ssize_t tcp_chr_recv(CharDriverState *chr, char *buf, size_t len)
+ #ifdef MSG_CMSG_CLOEXEC
+     flags |= MSG_CMSG_CLOEXEC;
+ #endif
+-    ret = recvmsg(s->fd, &msg, flags);
++    do {
++        ret = recvmsg(s->fd, &msg, flags);
++    } while (ret == -1 && errno == EINTR);
++
+     if (ret > 0 && s->is_unix) {
+         unix_process_msgfd(chr, &msg);
+     }
+@@ -2808,7 +2811,13 @@ static ssize_t tcp_chr_recv(CharDriverState *chr, char *buf, size_t len)
+ static ssize_t tcp_chr_recv(CharDriverState *chr, char *buf, size_t len)
+ {
+     TCPCharDriver *s = chr->opaque;
+-    return qemu_recv(s->fd, buf, len, 0);
++    ssize_t ret;
++
++    do {
++        ret = qemu_recv(s->fd, buf, len, 0);
++    } while (ret == -1 && socket_error() == EINTR);
++
++    return ret;
+ }
+ #endif
+ 
+-- 
+2.1.4
+

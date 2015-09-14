@@ -2,6 +2,9 @@ qemu (1:2.1+dfsg-12+deb8u5) UNRELEASED; urgency=medium
 
   * apply block-fix-max-nb_sectors-in-bdrv_make_zero.patch from upstream
     (Closes: #797221)
+  * apply qemu-char-handle-EINTR-for-TCP-character-devices.patch and
+    qemu-char-fix-missed-data-on-unix-socket.patch from upstream
+    (Closes: #793817)
 
  -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 14 Sep 2015 13:45:59 +0300
 
