@@ -1,4 +1,4 @@
-qemu (1:2.5+dfsg-5ubuntu6) UNRELEASED; urgency=medium
+qemu (1:2.5+dfsg-5ubuntu6) xenial; urgency=medium
 
   * Cherrypick upstream patch vhost-user-interrupt-management-fixes.patch
     (LP: #1556306)
