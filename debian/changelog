@@ -1,3 +1,10 @@
+qemu (1:2.5+dfsg-5ubuntu12) yakkety; urgency=medium
+
+  * Cherrypick upstream patches to support the query-gic-version QMP command
+    (LP: #1566564)
+
+ -- dann frazier <dannf@ubuntu.com>  Tue, 05 Apr 2016 16:56:11 -0600
+
 qemu (1:2.5+dfsg-5ubuntu11) yakkety; urgency=medium
 
   [Stefan Bader]

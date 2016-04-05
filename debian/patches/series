@@ -29,3 +29,7 @@ block-set-device-list-tqe-prev-to-NULL
 vhost-user-interrupt-management-fixes.patch
 qemu-seccomp-sysinfo.patch
 ubuntu/enable-svm-by-default.patch
+arm-qmp-add-query-gic-capabilities-interface.patch
+arm-enhance-kvm_arm_create_scratch_host_vcpu.patch
+kvm-add-kvm_device_supported-helper-function.patch
+arm-implement-query-gic-capabilities.patch
