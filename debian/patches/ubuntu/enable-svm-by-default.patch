@@ -1,0 +1,50 @@
+Description: Enable svm by default for qemu64 cpu on AMD
+ Upstream changed the default behavior late in 2014 with the patch:
+ .
+ 75d373ef97: target-i386: Disable SVM by default in KVM mode.
+ .
+ We enable vmx by default for intel, so continue to enable svm by default
+ as well.
+ .
+ This is not appropriate for upstreaming, as enabling svm is a distro
+ decision.
+Author: Stefan Bader <stefan.bader@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1561019
+Forwarded: no
+
+Index: qemu/hw/i386/pc_piix.c
+===================================================================
+--- qemu.orig/hw/i386/pc_piix.c
++++ qemu/hw/i386/pc_piix.c
+@@ -325,7 +325,6 @@ static void pc_compat_2_1(MachineState *
+ 
+     pc_compat_2_2(machine);
+     smbios_uuid_encoded = false;
+-    x86_cpu_change_kvm_default("svm", NULL);
+     pcms->enforce_aligned_dimm = false;
+ }
+ 
+Index: qemu/hw/i386/pc_q35.c
+===================================================================
+--- qemu.orig/hw/i386/pc_q35.c
++++ qemu/hw/i386/pc_q35.c
+@@ -309,7 +309,6 @@ static void pc_compat_2_1(MachineState *
+     pc_compat_2_2(machine);
+     pcms->enforce_aligned_dimm = false;
+     smbios_uuid_encoded = false;
+-    x86_cpu_change_kvm_default("svm", NULL);
+ }
+ 
+ static void pc_compat_2_0(MachineState *machine)
+Index: qemu/target-i386/cpu.c
+===================================================================
+--- qemu.orig/target-i386/cpu.c
++++ qemu/target-i386/cpu.c
+@@ -1380,7 +1380,6 @@ static PropValue kvm_default_props[] = {
+     { "x2apic", "on" },
+     { "acpi", "off" },
+     { "monitor", "off" },
+-    { "svm", "off" },
+     { NULL, NULL },
+ };
+ 
