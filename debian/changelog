@@ -1,3 +1,10 @@
+qemu (1:2.5+dfsg-5ubuntu11) yakkety; urgency=medium
+
+  [Stefan Bader]
+  * Enable svm by default for qemu64 on amd (LP: #1561019)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 22 Apr 2016 16:53:55 -0500
+
 qemu (1:2.5+dfsg-5ubuntu10) xenial; urgency=medium
 
   * qemu-system-s390x only available on s390x, so qemu-system should only
