@@ -1,3 +1,73 @@
+qemu (1:2.6+dfsg-1ubuntu1) yakkety; urgency=medium
+
+  * Merge with Debian; remaining changes:
+    - debian/rules: do not drop the init scripts loading kvm modules
+      (still needed in precise in cloud archive)
+    - qemu-system-common.postinst:
+      * remove acl placed by udev, and add udevadm trigger.
+      * reload kvm_intel if needed to set nested=1
+    - qemu-system-common.preinst: add kvm group if needed
+    - add qemu-kvm upstart job and defaults file (rules,
+      qemu-system-x86.qemu-kvm.default, qemu-system-x86.qemu-kvm.upstart)
+    - rules,qemu-system-x86.modprobe: support use under older udevs which
+      do not auto-load the kvm kernel module.  Enable nesting by default
+      on intel.
+    - d/p/ubuntu/expose-vmx_qemu64cpu.patch: enable nested kvm by default
+      in qemu64 cpu type.
+    - d/p/ubuntu/define-ubuntu-machine-types.patch: define distro machine
+      types to ease future live vm migration.
+    - apport hook for qemu source package: d/source_qemu-kvm.py,
+      d/qemu-system-common.install
+    - Make qemu-system-common and qemu-utils depend on qemu-block-extra
+      to fix errors with missing block backends. (LP: #1495895)
+    - s390x:
+      * Create qemu-system-s390x package
+      * Enable pie by default, on ubuntu/s390x.
+      * Enable svm by default for qemu64 on amd
+      * Include s390-ccw.img firmware
+      * have qemu-system-aarch64 Suggest: qemu-efi; this should be a stronger
+        relationship, but qemu-efi is still in universe right now.
+  * Drop patches which have been applied upstream:
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 19 May 2016 12:11:36 -0500
+
+qemu (1:2.6+dfsg-1) unstable; urgency=medium
+
+  * new upstream release
+   Closes: #799115
+   Closes: #822369, #823588
+   Closes: #813698
+   Closes: #805827
+   Closes: #813585
+   Closes: #823830 CVE-2016-3710 CVE-2016-3712
+   Closes: #813193 CVE-2016-2198
+   Closes: #813194 CVE-2016-2197
+   Closes: #815008 CVE-2016-2392
+   Closes: #815009 CVE-2016-2391
+   Closes: #815680 CVE-2016-2538
+   Closes: #821038 CVE-2016-4001
+   Closes: #822344 CVE-2016-4037
+   Closes: #817181 CVE-2016-2841
+   Closes: #817182 CVE-2016-2857
+   Closes: #817183 CVE-2016-2858
+   - removed all patches applied upstream
+   - removed mjt-set-oem-in-rsdt-like-slic.diff, feature has been
+     implemented in upstream differently
+   - refreshed local patches
+  * do not recommend sharutils for qemu-utils anymore (Closes: #820449)
+  * typo fix in qemu-system-misc description (Closes: #822883)
+  * allow qemu-debootstrap to create mips64el chroot (Closes: #817234)
+  * switch VCS URLs from http to https (lintian)
+  * Bump Standards-Version to 3.9.8 (no changes)
+  * code spelling fixes from upstream
+  * added s390x-virtio-ccw-fix-spelling.patch from upstream
+  * added hw-ipmi-fix-spelling.patch from upstream
+  * added docs-specify-spell-fix.patch from upstream
+  * added fsdev-spelling-fix.patch from upstream
+  * fold long list of supported arches in package descriptions
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Wed, 18 May 2016 14:44:14 +0300
+
 qemu (1:2.5+dfsg-5ubuntu12) yakkety; urgency=medium
 
   * Cherrypick upstream patches to support the query-gic-version QMP command
