@@ -16,22 +16,10 @@ Index: qemu/hw/i386/pc_piix.c
 ===================================================================
 --- qemu.orig/hw/i386/pc_piix.c
 +++ qemu/hw/i386/pc_piix.c
-@@ -325,7 +325,6 @@ static void pc_compat_2_1(MachineState *
- 
+@@ -308,7 +308,6 @@ static void pc_compat_2_2(MachineState *
+ static void pc_compat_2_1(MachineState *machine)
+ {
      pc_compat_2_2(machine);
-     smbios_uuid_encoded = false;
--    x86_cpu_change_kvm_default("svm", NULL);
-     pcms->enforce_aligned_dimm = false;
- }
- 
-Index: qemu/hw/i386/pc_q35.c
-===================================================================
---- qemu.orig/hw/i386/pc_q35.c
-+++ qemu/hw/i386/pc_q35.c
-@@ -309,7 +309,6 @@ static void pc_compat_2_1(MachineState *
-     pc_compat_2_2(machine);
-     pcms->enforce_aligned_dimm = false;
-     smbios_uuid_encoded = false;
 -    x86_cpu_change_kvm_default("svm", NULL);
  }
  
@@ -40,7 +28,7 @@ Index: qemu/target-i386/cpu.c
 ===================================================================
 --- qemu.orig/target-i386/cpu.c
 +++ qemu/target-i386/cpu.c
-@@ -1380,7 +1380,6 @@ static PropValue kvm_default_props[] = {
+@@ -1403,7 +1403,6 @@ static PropValue kvm_default_props[] = {
      { "x2apic", "on" },
      { "acpi", "off" },
      { "monitor", "off" },
