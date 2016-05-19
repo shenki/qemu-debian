@@ -1,6 +1,6 @@
 qemu (1:2.6+dfsg-1ubuntu1) yakkety; urgency=medium
 
-  * Merge with Debian; remaining changes:
+  * Merge with Debian; remaining changes:  (LP: #1583775)
     - debian/rules: do not drop the init scripts loading kvm modules
       (still needed in precise in cloud archive)
     - qemu-system-common.postinst:
