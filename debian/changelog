@@ -1,3 +1,11 @@
+qemu (1:2.8+dfsg-3ubuntu2.9) UNRELEASED; urgency=medium
+
+  * reverted "Backport support for GICv3/vITS save/restore (LP 1710019)."
+    as there was an arm regressions found in zesty-proposed (cancelled before
+    SRU release).
+
+ -- Christian Ehrhardt <christian.ehrhardt@canonical.com>  Thu, 30 Nov 2017 10:34:58 +0100
+
 qemu (1:2.8+dfsg-3ubuntu2.8) zesty; urgency=medium
 
   * Backport support for GICv3/vITS save/restore (LP: #1710019).
