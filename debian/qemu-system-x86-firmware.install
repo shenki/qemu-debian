@@ -1,0 +1,2 @@
+b/x86/*.bin usr/share/qemu
+qemu-build/pc-bios/optionrom/*.bin /usr/share/qemu

@@ -116,6 +116,36 @@ ifeq ($(enable_linux_user),enable)
 endif
 	touch $@
 
+define build-seabios
+	mkdir -p b/$1
+	cp $< b/$1/.config
+	$(MAKE) -C roms/seabios KCONFIG_CONFIG=$(CURDIR)/b/$1/.config \
+                OUT=$(CURDIR)/b/$1/ oldnoconfig
+	$(MAKE) -C roms/seabios KCONFIG_CONFIG=$(CURDIR)/b/$1/.config \
+                OUT=$(CURDIR)/b/$1/ EXTRAVERSION=-$(DEB_VERSION) \
+		$(CURDIR)/b/$1/$2
+	mkdir -p $(dir $@)
+	mv b/$1/$2 $@
+endef
+
+x86_seabios_files = \
+	$(patsubst %,b/x86/%.bin,bios bios-256k vgabios $(addprefix vgabios-,stdvga cirrus vmware qxl virtio))
+b/x86/bios.bin: roms/config.seabios-128k
+	$(call build-seabios,seabios-128k,bios.bin)
+b/x86/bios-256k.bin: roms/config.seabios-256k
+	$(call build-seabios,seabios-256k,bios.bin)
+b/x86/vgabios.bin: roms/config.vga-isavga
+	$(call build-seabios,vga-isavga,vgabios.bin)
+b/x86/vgabios-%.bin: roms/config.vga-%
+	$(call build-seabios,$(patsubst .%,%,$(suffix $<)),vgabios.bin)
+build-x86-seabios: $(x86_seabios_files)
+# it is built during qemu-system build
+#build-x86-optionrom:
+#	$(MAKE) -C qemu-build/pc-bios/optionrom/ build-all
+
+x86_firmware_files = $(x86_seabios_files)
+build-x86-firmware: $(x86_firmware_files)
+
 build: build-arch build-indep
 build-arch: build-stamp
 build-indep: build-stamp
@@ -133,11 +163,17 @@ ifeq ($(enable_linux_user),enable)
 	# we use this invocation to build just the binaries
 	$(MAKE) -C user-static-build V=${V} $(foreach t,${user_targets},subdir-${t}-linux-user)
 endif
+
+ifneq ($(filter qemu-system-x86-firmware,${BUILD_PACKAGES}),)
+	$(MAKE) -f debian/rules build-x86-firmware
+endif
+
 	touch $@
 
 clean:	debian/control
 	dh_testdir
 	rm -rf qemu-build user-static-build
+	rm -rf b/
 	rm -f configure-stamp build-stamp
 	find scripts/ -name '*.pyc' -delete || :
 	dh_clean

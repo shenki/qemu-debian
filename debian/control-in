@@ -100,6 +100,9 @@ Build-Depends: debhelper (>= 9),
 ##--enable-netmap todo bsd
 ##--enable-quorum todo needs gcrypt
 ##--enable-xen-pci-passthrough todo
+Build-Depends-Indep:
+# seabios:
+ acpica-tools
 Build-Conflicts: oss4-dev
 Standards-Version: 3.9.8
 Homepage: http://www.qemu.org/
@@ -321,7 +324,7 @@ Description: QEMU full system emulation binaries (sparc)
 Package: qemu-system-x86
 Architecture: amd64 arm arm64 armel armhf hppa i386 ia64 kfreebsd-amd64 kfreebsd-i386 mips mipsel mips64 mips64el powerpc powerpcspe ppc64 ppc64el s390x sparc sparc64 x32
 Multi-Arch: foreign
-Depends: ${shlibs:Depends}, ${misc:Depends}, qemu-system-common (>> 2.0.0+dfsg-7~),
+Depends: ${shlibs:Depends}, ${misc:Depends}, qemu-system-common (>> 2.0.0+dfsg-7~), qemu-system-x86-firmware,
  seabios (>= 1.10.2-1~), ipxe-qemu (>= 1.0.0+git-20131111.c3d1e78-1~)
 Recommends: qemu-system-gui (= ${binary:Version}), qemu-utils,
 :ubuntu: cpu-checker
@@ -343,6 +346,13 @@ Description: QEMU full system emulation binaries (x86)
  .
  On x86 host hardware this package also enables KVM kernel virtual machine
  usage on systems which supports it.
+
+Package: qemu-system-x86-firmware
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: QEMU full system emulation firmware for x86 targets
+ This package provides the necessary firmware for qemu-system-x86 package.
 
 Package: qemu-user
 Architecture: amd64 arm arm64 armel armhf hppa i386 ia64 mips mipsel mips64 mips64el powerpc powerpcspe ppc64 ppc64el s390x sparc sparc64 x32
