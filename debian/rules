@@ -142,8 +142,14 @@ build-x86-seabios: $(x86_seabios_files)
 # it is built during qemu-system build
 #build-x86-optionrom:
 #	$(MAKE) -C qemu-build/pc-bios/optionrom/ build-all
+b/x86/sgabios.bin:
+	rm -rf b/sgabios
+	cp -pr roms/sgabios b/
+	$(MAKE) -C b/sgabios/
+	chmod -x b/sgabios/sgabios.bin
+	cp -p b/sgabios/sgabios.bin $@
 
-x86_firmware_files = $(x86_seabios_files)
+x86_firmware_files = $(x86_seabios_files) b/x86/sgabios.bin
 build-x86-firmware: $(x86_firmware_files)
 
 build: build-arch build-indep
