@@ -1,0 +1,2 @@
+b/qemu/pc-bios/s390-ccw/s390-*.img /usr/share/qemu/
+debian/overrides/qemu-system-misc-firmware usr/share/lintian/overrides/

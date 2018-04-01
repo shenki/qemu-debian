@@ -173,6 +173,10 @@ endif
 ifneq ($(filter qemu-system-x86-firmware,${BUILD_PACKAGES}),)
 	$(MAKE) -f debian/rules build-x86-firmware
 endif
+ifneq ($(filter qemu-system-misc-firmware,${BUILD_PACKAGES}),)
+	$(MAKE) -C b/qemu/pc-bios/s390-ccw/ CCAS=s390x-linux-gnu-gcc CC=s390x-linux-gnu-gcc STRIP=s390x-linux-gnu-strip
+	chmod -x b/qemu/pc-bios/s390-ccw/s390-*.img
+endif
 
 	touch $@
 

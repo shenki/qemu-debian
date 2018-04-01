@@ -1,0 +1,6 @@
+qemu-system-misc-firmware: arch-independent-package-contains-binary-or-object usr/share/qemu/s390-ccw.img
+qemu-system-misc-firmware: arch-dependent-file-in-usr-share usr/share/qemu/s390-ccw.img
+qemu-system-misc-firmware: shared-lib-without-dependency-information usr/share/qemu/s390-ccw.img
+qemu-system-misc-firmware: arch-independent-package-contains-binary-or-object usr/share/qemu/s390-netboot.img
+qemu-system-misc-firmware: arch-dependent-file-in-usr-share usr/share/qemu/s390-netboot.img
+qemu-system-misc-firmware: shared-lib-without-dependency-information usr/share/qemu/s390-netboot.img
