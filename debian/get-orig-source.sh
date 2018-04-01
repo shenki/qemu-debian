@@ -56,6 +56,15 @@ rm -vf pc-bios/qemu_vga.ndrv	# roms/QemuMacDrivers/
 #rm -vf roms/u-boot.tar.*
 #dir roms/QemuMacDrivers
 
+# clean up objects without source
+rm -vf roms/SLOF/board-js2x/rtas/i2c_bmc.oco
+rm -vf roms/SLOF/board-js2x/rtas/ipmi_oem.oco
+rm -vf roms/SLOF/clients/takeover/takeover.oco
+
+rm -vf roms/u-boot-sam460ex/tools/multiplier/multiplier
+rm -vf roms/u-boot-sam460ex/tools/multiplier/multiplier.image
+rm -vf roms/u-boot-sam460ex/tools/updater/stubs.c	# garbage symlink
+
 dir dtc
 dir capstone
 
