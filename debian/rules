@@ -145,7 +145,8 @@ build-x86-seabios: $(x86_seabios_files)
 b/x86/sgabios.bin:
 	rm -rf b/sgabios
 	cp -pr roms/sgabios b/
-	$(MAKE) -C b/sgabios/
+# parallel make does not work: csum8 isn't built before usage
+	$(MAKE) -j1 -C b/sgabios/
 	chmod -x b/sgabios/sgabios.bin
 	cp -p b/sgabios/sgabios.bin $@
 
