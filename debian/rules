@@ -177,6 +177,40 @@ ifneq ($(filter qemu-system-misc-firmware,${BUILD_PACKAGES}),)
 	$(MAKE) -C b/qemu/pc-bios/s390-ccw/ CCAS=s390x-linux-gnu-gcc CC=s390x-linux-gnu-gcc STRIP=s390x-linux-gnu-strip
 	chmod -x b/qemu/pc-bios/s390-ccw/s390-*.img
 endif
+ifneq ($(filter qemu-system-ppc-firmware,${BUILD_PACKAGES}),)
+
+	mkdir -p b/ppc
+
+# spapr-rtas.bin
+# there's no explicit rule for .S=>.o target and no support for cross-comple in spapr-rtas subdir
+	powerpc64-linux-gnu-gcc -c pc-bios/spapr-rtas/spapr-rtas.S -o b/qemu/pc-bios/spapr-rtas/spapr-rtas.o
+	$(MAKE) -C b/qemu/pc-bios/spapr-rtas/ CC=powerpc64-linux-gnu-gcc OBJCOPY=powerpc64-linux-gnu-objcopy
+	mv -f b/qemu/pc-bios/spapr-rtas/spapr-rtas.bin b/ppc/
+	chmod -x b/ppc/spapr-rtas.bin
+
+	rm -rf b/slof
+	cp -a roms/SLOF b/slof
+	$(MAKE) -C b/slof CROSS=powerpc64-linux-gnu- qemu
+	mv -f b/slof/boot_rom.bin b/ppc/slof.bin
+	chmod -x b/ppc/slof.bin
+
+# u-boot can't be compiled, apparently 32/64 or host/target mismatch
+#	if [ -f roms/u-boot.tar.bz2 ]; then tar xf roms/u-boot.tar.bz2 -C b/ ; else cp -a roms/u-boot b/ ; fi
+#	$(MAKE) -C b/u-boot qemu-ppce500_config
+#	$(MAKE) -C b/u-boot CROSS_COMPILE=powerpc64-linux-gnu-
+#	powerpc64-linux-gnu-strip b/u-boot/u-boot -o b/ppc/u-boot.e500
+
+# the same applies to this version as well
+#	$(MAKE) -C roms/u-boot-sam460ex O=$(CURDIR)/b/am460ex Sam460ex_config
+#	$(MAKE) -C roms/u-boot-sam460ex O=$(CURDIR)/b/am460ex CROSS_COMPILE=powerpc64-linux-gnu-
+#	powerpc64-linux-gnu-strip b/sam460ex/u-boot.bin -o b/ppc/u-boot-sam460-20100605.bin
+
+# skiboot lacks .version file in distributed tarball
+#	rm -rf b/skiboot; cp -a roms/skiboot b/
+#	$(MAKE) -C b/skiboot CROSS=powerpc64-linux-gnu-
+#	cp b/skiboot/skiboot.lid b/ppc/skiboot.lid
+
+endif
 
 	touch $@
 
