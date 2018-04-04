@@ -51,8 +51,14 @@ ifneq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
 common_configure_opts  += --cross-prefix=$(DEB_HOST_GNU_TYPE)-
 endif
 
-ifeq (${enable_system},enable)
+build: b/build-stamp b/build-indep-stamp
+build-arch: b/build-stamp
+build-indep: b/build-indep-stamp
 
+build-arch-targets =
+build-targets =
+
+################ QEMU-SYSTEM and LINUX-USER targets
 # list of system (softmmu) targets, from ./configure
 system_targets = \
  i386 x86_64 alpha aarch64 arm cris lm32 hppa m68k microblaze microblazeel \
@@ -69,14 +75,6 @@ sysarch_sparc = $(filter sparc sparc64,${system_targets})
 sysarch_x86   = $(filter i386 x86_64,${system_targets})
 sysarch_misc  = $(filter-out $(foreach s,${sys_systems},${sysarch_$s}),${system_targets})
 
-else
-
-systems =
-
-endif # enable_system
-
-ifeq (${enable_linux_user},enable)
-
 # list of linux-user targets, from ./configure
 user_targets = \
  i386 x86_64 alpha aarch64 aarch64_be arm armeb cris hppa m68k microblaze microblazeel \
@@ -84,12 +82,10 @@ user_targets = \
  ppc ppc64 ppc64abi32 ppc64le riscv32 riscv64 sh4 sh4eb sparc sparc64 sparc32plus \
  s390x tilegx xtensa xtensaeb
 
-endif	# enable_linux_user
-
-b/configure-stamp: configure
+# system and linux-user build (in one go)
+# this target is always built, even if no user/system emulation is requested
+b/qemu/config-stamp:
 	dh_testdir
-
-	# system build
 	rm -rf b/qemu; mkdir -p b/qemu
 	cd b/qemu && \
 	    ../../configure ${common_configure_opts} --disable-user \
@@ -100,126 +96,187 @@ b/configure-stamp: configure
 		    $(DEB_HOST_ARCH_OS)-$(DEB_HOST_ARCH) debian/control) \
 		$(QEMU_CONFIGURE_OPTIONS) || \
 	 { echo ===== CONFIGURE FAILED ===; tail -n 50 config.log; exit 1; }
-
 # switch some modules back to be built-ins
 	sed -i -r 's/(CONFIG_CURSES)=m/\1=y/' \
 		b/qemu/config-host.mak
-
-ifeq ($(enable_linux_user),enable)
-# do not use debian/configure-opts here, all optional stuff will be enabled
-# automatically, dependencies are already verified in the main build
-	rm -rf b/user-static; mkdir b/user-static
-	cd b/user-static && \
-	    ../../configure ${common_configure_opts} \
-		--static --disable-system \
-		--target-list="$(addsuffix -linux-user,${user_targets})"
-endif
 	touch $@
 
-define build-seabios
-	mkdir -p b/$1
-	cp $< b/$1/.config
-	$(MAKE) -C roms/seabios KCONFIG_CONFIG=$(CURDIR)/b/$1/.config \
-                OUT=$(CURDIR)/b/$1/ oldnoconfig
-	$(MAKE) -C roms/seabios KCONFIG_CONFIG=$(CURDIR)/b/$1/.config \
-                OUT=$(CURDIR)/b/$1/ EXTRAVERSION=-$(DEB_VERSION) \
-		$(CURDIR)/b/$1/$2
-	mkdir -p $(dir $@)
-	mv b/$1/$2 $@
-endef
-
-x86_seabios_files = \
-	$(patsubst %,b/x86/%.bin,bios bios-256k vgabios $(addprefix vgabios-,stdvga cirrus vmware qxl virtio))
-b/x86/bios.bin: roms/config.seabios-128k
-	$(call build-seabios,seabios-128k,bios.bin)
-b/x86/bios-256k.bin: roms/config.seabios-256k
-	$(call build-seabios,seabios-256k,bios.bin)
-b/x86/vgabios.bin: roms/config.vga-isavga
-	$(call build-seabios,vga-isavga,vgabios.bin)
-b/x86/vgabios-%.bin: roms/config.vga-%
-	$(call build-seabios,$(patsubst .%,%,$(suffix $<)),vgabios.bin)
-build-x86-seabios: $(x86_seabios_files)
-# it is built during qemu-system build
-#build-x86-optionrom:
-#	$(MAKE) -C b/qemu/pc-bios/optionrom/ build-all
-b/x86/sgabios.bin:
-	rm -rf b/sgabios
-	cp -pr roms/sgabios b/
-# parallel make does not work: csum8 isn't built before usage
-	$(MAKE) -j1 -C b/sgabios/
-	chmod -x b/sgabios/sgabios.bin
-	cp -p b/sgabios/sgabios.bin $@
-
-x86_firmware_files = $(x86_seabios_files) b/x86/sgabios.bin
-build-x86-firmware: $(x86_firmware_files)
-
-build: build-arch build-indep
-build-arch: b/build-stamp
-build-indep: b/build-stamp
-b/build-stamp: b/configure-stamp
-	dh_testdir
-
+b/qemu/build-stamp: b/qemu/config-stamp
 	# system and utils build
 	$(MAKE) -C b/qemu V=${V}
 ifeq (${enable_system},enable)
 	dtc -o b/qemu/pc-bios/bamboo.dtb pc-bios/bamboo.dts
 endif
+	touch $@
 
-ifeq ($(enable_linux_user),enable)
+build-targets += b/qemu/build-stamp
+
+b/user-static/config-stamp:
+# we do not use debian/configure-opts here, all optional stuff will be enabled
+# automatically, dependencies are already verified in the main build
+	rm -rf b/user-static; mkdir -p b/user-static
+	cd b/user-static && \
+	    ../../configure ${common_configure_opts} \
+		--static --disable-system \
+		--target-list="$(addsuffix -linux-user,${user_targets})"
+	touch $@
+
+b/user-static/build-stamp: b/user-static/config-stamp
 	# user-static build
 	# we use this invocation to build just the binaries
 	$(MAKE) -C b/user-static V=${V} $(foreach t,${user_targets},subdir-${t}-linux-user)
+	touch $@
+
+ifeq ($(enable_linux_user),enable)
+build-targets += b/user-static/build-stamp
 endif
+
+
+######## SeaBIOS and VGABIOS
+
+define seabios-config
+	rm -rf b/$1; mkdir -p b/$1
+	cp $< b/$1/.config
+	$(MAKE) -C roms/seabios KCONFIG_CONFIG=$(CURDIR)/b/$1/.config \
+                OUT=$(CURDIR)/b/$1/ oldnoconfig
+	touch $@
+endef
+define seabios-build
+	$(MAKE) -C roms/seabios KCONFIG_CONFIG=$(CURDIR)/b/$1/.config \
+                OUT=$(CURDIR)/b/$1/ EXTRAVERSION=-$(DEB_VERSION) \
+		$(CURDIR)/b/$1/$2.bin
+	mkdir -p $(dir $@)
+	cp b/$1/$2.bin $@
+endef
+
+seabios_variants = 128k 256k
+seabios_firmware = $(patsubst %,b/x86/seabios-%.bin,${seabios_variants})
+x86_firmware += ${seabios_firmware}
+$(patsubst %,b/seabios-%/config-stamp,${seabios_variants}): b/%/config-stamp: roms/config.%
+	$(call seabios-config,$*)
+${seabios_firmware}: b/x86/%.bin: b/%/config-stamp
+	$(call seabios-build,$*,bios)
+
+vgabios_variants = stdvga cirrus vmware qxl virtio isavga
+vgabios_firmware = $(patsubst %,b/x86/vgabios-%.bin,${vgabios_variants})
+x86_firmware += ${vgabios_firmware}
+$(patsubst %,b/vgabios-%/config-stamp,${vgabios_variants}): b/vgabios-%/config-stamp: roms/config.vga-%
+	$(call seabios-config,vgabios-$*)
+${vgabios_firmware}: b/x86/%.bin: b/%/config-stamp
+	$(call seabios-build,$*,vgabios)
+
+### OptionROM
+x86_firmware += b/qemu/pc-bios/optionrom/build-stamp
+b/qemu/pc-bios/optionrom/build-stamp: b/qemu/config-stamp
+	$(MAKE) -C b/qemu/pc-bios/optionrom/ build-all
+	mkdir -p b/x86
+	cp b/qemu/pc-bios/optionrom/*.bin b/x86/
+	touch $@
+
+### SGABIOS, just a single .S file but needs some postprocessing
+# upstream Makefile defines a bunch of variables (build date etc)
+b/x86/sgabios.bin: roms/sgabios/*
+	mkdir -p b/sgabios
+	gcc -Wall -Os -m32 -nostdlib \
+		-DBUILD_DATE="\"${DEB_VERSION_UPSTREAM_REVISION}\"" \
+		-DBUILD_SHORT_DATE="\"${DEB_VERSION_UPSTREAM_REVISION}\"" \
+		-DBUILD_HOST="\"buildhost\"" -DBUILD_USER="\"builduser\"" \
+		-c -o b/sgabios/sgabios.o roms/sgabios/sgabios.S
+	ld -T roms/sgabios/rom16.ld -nostdlib b/sgabios/sgabios.o -o b/sgabios/sgabios.elf
+	objcopy -O binary b/sgabios/sgabios.elf b/sgabios/sgabios.bin
+	gcc -o b/sgabios/csum8 roms/sgabios/csum8.c
+	./b/sgabios/csum8 b/sgabios/sgabios.bin
+	chmod -x b/sgabios/sgabios.bin
+	mkdir -p $(dir $@)
+	cp b/sgabios/sgabios.bin $@
+x86_firmware += b/x86/sgabios.bin
+
+# we can build ipxe roms here too
 
 ifneq ($(filter qemu-system-x86-firmware,${BUILD_PACKAGES}),)
-	$(MAKE) -f debian/rules build-x86-firmware
+build-indep-targets += ${x86_firmware}
 endif
-ifneq ($(filter qemu-system-misc-firmware,${BUILD_PACKAGES}),)
-	$(MAKE) -C b/qemu/pc-bios/s390-ccw/ CCAS=s390x-linux-gnu-gcc CC=s390x-linux-gnu-gcc STRIP=s390x-linux-gnu-strip
-	chmod -x b/qemu/pc-bios/s390-ccw/s390-*.img
-endif
-ifneq ($(filter qemu-system-ppc-firmware,${BUILD_PACKAGES}),)
 
-	mkdir -p b/ppc
+S390X_CROSS = s390x-linux-gnu-
+
+b/qemu/pc-bios/s390-ccw/build-stamp: b/qemu/config-stamp
+	$(MAKE) -C b/qemu/pc-bios/s390-ccw/ CCAS=${S390X_CROSS}gcc CC=${S390X_CROSS}gcc STRIP=${S390X_CROSS}strip
+	chmod -x b/qemu/pc-bios/s390-ccw/s390-*.img
+	touch $@
+
+ifneq ($(filter qemu-system-misc-firmware,${BUILD_PACKAGES}),)
+build-indep-targets += b/qemu/pc-bios/s390-ccw/build-stamp
+endif
+
+############# PowerPC firmware
+ppc_firmware =
+PPC_CROSS = powerpc64-linux-gnu-
 
 # spapr-rtas.bin
 # there's no explicit rule for .S=>.o target and no support for cross-comple in spapr-rtas subdir
-	powerpc64-linux-gnu-gcc -c pc-bios/spapr-rtas/spapr-rtas.S -o b/qemu/pc-bios/spapr-rtas/spapr-rtas.o
-	$(MAKE) -C b/qemu/pc-bios/spapr-rtas/ CC=powerpc64-linux-gnu-gcc OBJCOPY=powerpc64-linux-gnu-objcopy
-	mv -f b/qemu/pc-bios/spapr-rtas/spapr-rtas.bin b/ppc/
-	chmod -x b/ppc/spapr-rtas.bin
+# just make it all here
+ppc_firmware += b/ppc/spapr-rtas.bin
+b/ppc/spapr-rtas.bin: pc-bios/spapr-rtas/spapr-rtas.S
+	mkdir -p b/spapr-rtas
+	${PPC_CROSS}gcc -c pc-bios/spapr-rtas/spapr-rtas.S -o b/spapr-rtas/spapr-rtas.o
+	${PPC_CROSS}gcc -nostdlib -o b/spapr-rtas/spapr-rtas.img b/spapr-rtas/spapr-rtas.o
+	${PPC_CROSS}objcopy -O binary -j .text b/spapr-rtas/spapr-rtas.img b/spapr-rtas/spapr-rtas.bin
+	chmod -x b/spapr-rtas/spapr-rtas.bin
+	mkdir -p b/ppc
+	cp b/spapr-rtas/spapr-rtas.bin $@
 
+b/slof/config-stamp: roms/SLOF/Makefile
 	rm -rf b/slof
-	cp -a roms/SLOF b/slof
-	$(MAKE) -C b/slof CROSS=powerpc64-linux-gnu- qemu
-	mv -f b/slof/boot_rom.bin b/ppc/slof.bin
-	chmod -x b/ppc/slof.bin
+	mkdir -p b
+	cp -pr roms/SLOF b/slof
+	touch $@
+ppc_firmware += b/ppc/slof.bin
+b/ppc/slof.bin: b/slof/config-stamp
+	$(MAKE) -C b/slof CROSS=${PPC_CROSS} qemu
+	chmod -x b/slof/boot_rom.bin
+	mkdir -p b/ppc
+	cp b/slof/boot_rom.bin b/ppc/slof.bin
 
 # u-boot can't be compiled, apparently 32/64 or host/target mismatch
+# also u-boot is maintained in debian so we can use files from there
 #	if [ -f roms/u-boot.tar.bz2 ]; then tar xf roms/u-boot.tar.bz2 -C b/ ; else cp -a roms/u-boot b/ ; fi
 #	$(MAKE) -C b/u-boot qemu-ppce500_config
-#	$(MAKE) -C b/u-boot CROSS_COMPILE=powerpc64-linux-gnu-
-#	powerpc64-linux-gnu-strip b/u-boot/u-boot -o b/ppc/u-boot.e500
+#	$(MAKE) -C b/u-boot CROSS_COMPILE=${PPC_CROSS}
+#	mkdir -p b/ppc
+#	${PPC_CROSS}strip b/u-boot/u-boot -o b/ppc/u-boot.e500
 
 # the same applies to this version as well
 #	$(MAKE) -C roms/u-boot-sam460ex O=$(CURDIR)/b/am460ex Sam460ex_config
-#	$(MAKE) -C roms/u-boot-sam460ex O=$(CURDIR)/b/am460ex CROSS_COMPILE=powerpc64-linux-gnu-
-#	powerpc64-linux-gnu-strip b/sam460ex/u-boot.bin -o b/ppc/u-boot-sam460-20100605.bin
+#	$(MAKE) -C roms/u-boot-sam460ex O=$(CURDIR)/b/am460ex CROSS_COMPILE=${PPC_CROSS}
+#	mkdir -p b/ppc
+#	cp b/sam460ex/u-boot.bin b/ppc/u-boot-sam460-20100605.bin
 
 # skiboot lacks .version file in distributed tarball
 #	rm -rf b/skiboot; cp -a roms/skiboot b/
-#	$(MAKE) -C b/skiboot CROSS=powerpc64-linux-gnu-
+#	$(MAKE) -C b/skiboot CROSS=${PPC_CROSS}
 #	cp b/skiboot/skiboot.lid b/ppc/skiboot.lid
 
+# openhackware
+b/openhackware/config-stamp: roms/openhackware/Makefile
+	rm -rf b/openhackware
+	mkdir -p b
+	cp -pr roms/openhackware b/openhackware
+	touch $@
+ppc_firmware += b/ppc/ppc_rom.bin
+b/ppc/ppc_rom.bin: b/openhackware/config-stamp
+	make -C b/openhackware/ CROSS_COMPILE=${PPC_CROSS}
+	cp b/openhackware/ppc_rom.bin $@
+
+# might as well build openbios (for ppc and sparc)
+
+ifneq ($(filter qemu-system-ppc-firmware,${BUILD_PACKAGES}),)
+build-indep-targets += ${ppc_firmware}
 endif
 
+b/build-stamp: ${build-targets}
 	touch $@
-
-clean:	debian/control
-	dh_testdir
-	rm -rf b
-	find scripts/ -name '*.pyc' -delete || :
-	dh_clean
+b/build-indep-stamp: ${build-indep-targets}
+	touch $@
 
 # define ${ai} variable to be one of -i (indep), -a (arch) or nothing (both)
 ai :=
@@ -228,6 +285,12 @@ binary-indep: install
 binary-arch: ai := -a
 binary-arch: install
 binary: install
+
+clean:	debian/control
+	dh_testdir
+	rm -rf b
+	find scripts/ -name '*.pyc' -delete || :
+	dh_clean
 
 define inst-system
 	mkdir -p debian/qemu-system-$1/usr/share/man/man1 debian/qemu-system-$1/usr/bin
@@ -394,5 +457,5 @@ endif
 get-orig-source:
 	./debian/get-orig-source.sh ${DEB_VERSION}
 
-.PHONY: build clean binary-indep binary-arch binary install get-orig-source
+.PHONY: build clean build-indep build-arch build binary-indep binary-arch binary install get-orig-source
 

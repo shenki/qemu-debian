@@ -284,9 +284,9 @@ Architecture: amd64 arm arm64 armel armhf hppa i386 ia64 kfreebsd-amd64 kfreebsd
 Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}, qemu-system-common (>> 1:2.12~), qemu-system-ppc-firmware,
 # ubuntu can't Depend on openbios-ppc and openhackware as they're in universe
-:debian: openbios-ppc (>= 1.1+svn1229), openhackware
+:debian: openbios-ppc (>= 1.1+svn1229)
 Suggests: samba, vde2, qemu-block-extra (= ${binary:Version}),
-:ubuntu: openbios-ppc (>= 1.1+svn1229), openhackware
+:ubuntu: openbios-ppc (>= 1.1+svn1229)
 Recommends: qemu-system-gui (= ${binary:Version}), qemu-utils,
 # ppc targets use vgabios-stdvga and bootroms
  seabios, ipxe-qemu (>= 1.0.0+git-20131111.c3d1e78-1~)
