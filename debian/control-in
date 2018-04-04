@@ -306,6 +306,7 @@ Description: QEMU full system emulation binaries (ppc)
 
 Package: qemu-system-ppc-firmware
 Architecture: all
+Section: libs
 Multi-Arch: foreign
 Depends: ${misc:Depends}
 Description: QEMU full system emulation firmware for powerpc qemu system targets
@@ -363,6 +364,7 @@ Description: QEMU full system emulation binaries (x86)
 
 Package: qemu-system-x86-firmware
 Architecture: all
+Section: libs
 Multi-Arch: foreign
 Replaces: sgabios
 Conflicts: sgabios
