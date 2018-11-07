@@ -8,6 +8,9 @@ include /usr/share/dpkg/architecture.mk
 # get CFLAGS LDFLAGS etc
 include /usr/share/dpkg/buildflags.mk
 
+# vte_terminal_set_encoding is deprecated
+CFLAGS += -DVTE_DISABLE_DEPRECATION_WARNINGS
+
 ifeq ($(shell dpkg-vendor --derives-from Ubuntu && echo yes),yes)
 VENDOR := UBUNTU
 DEB_BUILD_PARALLEL = yes
